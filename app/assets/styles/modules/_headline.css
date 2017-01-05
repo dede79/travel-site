@@ -16,21 +16,29 @@
     font-size:1.875rem; /* 30/16px */
   }
   
-  &--narrow{
+    &--narrow {
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
   }
-  
-  &--light{
+
+  &--light {
     font-weight: 100;
   }
-  
-  &--b-margin-small{
-    margin-bottom:.5em;
+
+  strong {
+    font-weight: 400;
   }
-  
-  &--b-margin-large{
-    margin-bottom:1.6em;
+
+  &--b-margin-small {
+    margin-bottom: .5em;
+  }
+
+  &--b-margin-large {
+    margin-bottom: 1.6em;
+  }
+
+  &--no-t-margin {
+    margin-top: 0;
   }
 }
