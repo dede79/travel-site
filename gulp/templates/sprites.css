@@ -1,0 +1,19 @@
+/*Do not edit modules/_sprite directly as it's generated automaticallly via Gulp. Edit instead gulp/templates/sprite*/
+
+/*gulp svg sprite package uses the moustache template engine, the below will loop trhough elements, read doc in github for this package*/
+{{#shapes}}
+/* first tag will only run once for baseline .icon class*/
+  {{#first}}
+    .icon {
+      /*  triple curly brackets in var to display the data with the backslash*/
+      background-image: url('/assets/images/sprites/{{{sprite}}}');
+    }
+  {{/first}}
+
+.icon--{{base}} {
+  width:{{width.outer}}px ;
+  height:{{height.outer}}px ;
+/*  from the svg-sprite package github page*/
+  background-position: {{position.relative.xy}}; 
+}
+{{/shapes}}

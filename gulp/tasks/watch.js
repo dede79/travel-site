@@ -3,7 +3,7 @@
 
 var gulp = require('gulp');
 var watch = require('gulp-watch');
-var browserSync = require('browser-sync').create(); //for browsersync only require the method create
+var browserSync = require('browser-sync').create(); //for browsersync only require the function create
 
 //set up gulp to watch the files
 gulp.task('watch', function(){
@@ -23,7 +23,7 @@ watch('./app/index.html', function(){// takes 2 args: file on computer to watch,
 	});//** to go to any future folders, * any css file any name
 });
 
-//styles task is a dependency of cssInject task
+//styles task is a dependency of cssInject task, pipe stylesheet to browsersync
 gulp.task('cssInject', ['styles'], function() {
 		return gulp.src('./app/temp/styles/styles.css').pipe(browserSync.stream());
 });
