@@ -11,7 +11,7 @@ class MobileMenu {
   }
 
   events() {
-  this.menuIcon.click(this.toggleTheMenu.bind(this));
+    this.menuIcon.click(this.toggleTheMenu.bind(this));
   }
 
   toggleTheMenu() {
@@ -21,5 +21,4 @@ class MobileMenu {
   }
 }
 
-//better way of exporting modules
-export default MobileMenu; 
+export default MobileMenu;
