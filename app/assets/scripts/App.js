@@ -24,6 +24,7 @@
 
 //code for mobile menu:
 
+import $ from 'jquery';
 //new js ES6 native way of importing modules
 import MobileMenu from './modules/MobileMenu';
 import RevealOnScroll from './modules/RevealOnScroll';
@@ -33,8 +34,6 @@ import Modal from './modules/Modal';
 //instantiate objects
 var mobileMenu = new MobileMenu();
 //var revealOnScroll = new RevealOnScroll();
-
-import $ from 'jquery';
 
 //these values will be used placed in the RevealOnScroll params
 new RevealOnScroll($(".feature-item"), "85%");
