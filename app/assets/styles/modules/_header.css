@@ -44,7 +44,7 @@
       
       /* when scrolling down, logo will shink to fit navbar at medium and large screens */
       .site-header--dark & {
-        transform: scale(.57); 
+        transform: scale(.55); 
       }
     }
   }

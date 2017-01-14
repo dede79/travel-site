@@ -1,7 +1,7 @@
 module.exports = {
   entry: {
-    App: "./app/assets/scripts/App.js",
-    Vendor: "./app/assets/scripts/Vendor.js",
+    App1: "./app/assets/scripts/App.js",
+    Vendor: "./app/assets/scripts/Vendor.js"
   },
   output: {
     path: "./app/temp/scripts",
@@ -12,12 +12,12 @@ module.exports = {
       {
         loader: 'babel',
         query: {
-          presets:['es2015']
+          presets: ['es2015']
         },
-        test: /\.js$/, //regex to tell babel to convert only js files
-        exclude: /node_modules/  //exclude node_modules folder
-      
+        test: /\.js$/, //regex telling babel to test js files only
+        exclude: /node_modules/ //dont compile node_modules folder
       }
     ]
-  }
-}
+  },
+  debug: true
+};

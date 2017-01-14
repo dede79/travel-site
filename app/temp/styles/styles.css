@@ -1230,8 +1230,8 @@ a {
   }
 
   .site-header--dark .site-header__logo {
-    -webkit-transform: scale(.57);
-            transform: scale(.57);
+    -webkit-transform: scale(.55);
+            transform: scale(.55);
   }
 }
 

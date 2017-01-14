@@ -1,3 +1,4 @@
+//this is the Modal window
 import $ from 'jquery';
 
 class Modal {
