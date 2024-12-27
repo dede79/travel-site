@@ -1,33 +1,54 @@
-//bring in jquery file
-import $ from 'jquery';
-//bring in waypoints file, go up 3 folders first
-import waypoints from '../../../../node_modules/waypoints/lib/noframework.waypoints';
+import throttle from 'lodash/throttle'
+import debounce from 'lodash/debounce'
 
 class RevealOnScroll {
-  constructor(els, offset) {
-    this.itemsToReveal = els;
-    this.offsetPercentage = offset;
-    this.hideInitially();
-    this.createWaypoints();
+  constructor(els, thresholdPercent) {
+    this.thresholdPercent = thresholdPercent
+    this.itemsToReveal = els
+    this.browserHeight = window.innerHeight
+    this.hideInitially()
+    this.scrollThrottle = throttle(this.calcCaller, 200).bind(this)
+    this.events()
+  }
+
+  events() {
+    window.addEventListener("scroll", this.scrollThrottle)
+    window.addEventListener("resize", debounce(() => {
+      console.log("Resize just ran")
+      this.browserHeight = window.innerHeight
+    }, 333))
+  }
+
+  calcCaller() {
+    console.log("Scroll function ran")
+    this.itemsToReveal.forEach(el => {
+      if (el.isRevealed == false) {
+        this.calculateIfScrolledTo(el)
+      }
+    })
+  }
+
+  calculateIfScrolledTo(el) {
+    if (window.scrollY + this.browserHeight > el.offsetTop) {
+      console.log("Element was calculated")
+      let scrollPercent = (el.getBoundingClientRect().top / this.browserHeight) * 100
+      if (scrollPercent < this.thresholdPercent) {
+        el.classList.add("reveal-item--is-visible")
+        el.isRevealed = true
+        if (el.isLastItem) {
+          window.removeEventListener("scroll", this.scrollThrottle)
+        }
+      }
+    }
   }
 
   hideInitially() {
-    this.itemsToReveal.addClass("reveal-item");
-  }
-
-  createWaypoints() {
-    var that = this; //so js can point to the this keyword in RevealOnScroll class
-    this.itemsToReveal.each(function() {
-      var currentItem = this;
-      new Waypoint({
-        element: currentItem,
-        handler: function() {
-          $(currentItem).addClass("reveal-item--is-visible");
-        },
-        offset: that.offsetPercentage //offset when to appear when scrolling from bottom of browser (100% is the very bottom and 0 is the very top of window browser), use that var to point to the offset Percentage porperty.
-      });
-    });
+    this.itemsToReveal.forEach(el => {
+      el.classList.add("reveal-item")
+      el.isRevealed = false
+    })
+    this.itemsToReveal[this.itemsToReveal.length - 1].isLastItem = true
   }
 }
 
-export default RevealOnScroll;
+export default RevealOnScroll

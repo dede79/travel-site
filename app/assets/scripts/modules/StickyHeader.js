@@ -1,84 +1,53 @@
-import $ from 'jquery';
-import waypoints from '../../../../node_modules/waypoints/lib/noframework.waypoints';
-import smoothScroll from 'jquery-smooth-scroll';
+import throttle from 'lodash/throttle'
+import debounce from 'lodash/debounce'
 
-class StickyHeader{
-  constructor(){
-    //selects all properties with  class of lazyload
-    this.lazyImages = $(".lazyload");
-    this.siteHeader = $(".site-header");
-    this.headerTriggerElement = $(".large-hero__title");
-    this.createHeaderWaypoint();//run function below
-    //when creating methods as below remember to always call them up here in the constructor function!
-    this.pageSections = $(".page-section");
-    this.headerLinks = $(".primary-nav a");
-    this.createPageSectionWaypoints();
-    this.addSmoothScrolling();
-    this.refreshWaypoints();
-   }
-  
-//smooth scroll method
-addSmoothScrolling(){
-  this.headerLinks.smoothScroll(); //headerlinks var already has all nav links collected
-}
+class StickyHeader {
+  constructor() {
+    this.siteHeader = document.querySelector(".site-header")
+    this.pageSections = document.querySelectorAll(".page-section")
+    this.browserHeight = window.innerHeight
+    this.previousScrollY = window.scrollY
+    this.events()
+  }
 
-//waypoint header method
-createHeaderWaypoint(){
-  var that = this; //to point towards the main class above
-  new Waypoint({
-    element: this.headerTriggerElement[0],
-    handler: function(direction){
-      if(direction == "down"){//if scrolling down
-        that.siteHeader.addClass("site-header--dark");
-      }else {//whe scrolling back to top header goes light again
-        that.siteHeader.removeClass("site-header--dark");
+  events() {
+    window.addEventListener("scroll", throttle(() => this.runOnScroll(), 200))
+    window.addEventListener("resize", debounce(() => {
+      this.browserHeight = window.innerHeight
+    }, 333))
+  }
+
+  runOnScroll() {
+    this.determineScrollDirection()
+
+    if (window.scrollY > 60) {
+      this.siteHeader.classList.add("site-header--dark")
+    } else {
+      this.siteHeader.classList.remove("site-header--dark")
+    }
+
+    this.pageSections.forEach(el => this.calcSection(el))
+  }
+
+  determineScrollDirection() {
+    if (window.scrollY > this.previousScrollY) {
+      this.scrollDirection = 'down'
+    } else {
+      this.scrollDirection = 'up'
+    }
+    this.previousScrollY = window.scrollY
+  }
+
+  calcSection(el) {
+    if (window.scrollY + this.browserHeight > el.offsetTop && window.scrollY < el.offsetTop + el.offsetHeight) {
+      let scrollPercent = el.getBoundingClientRect().top / this.browserHeight * 100
+      if (scrollPercent < 18 && scrollPercent > -0.1 && this.scrollDirection == 'down' || scrollPercent < 33 && this.scrollDirection == 'up') {
+        let matchingLink = el.getAttribute("data-matching-link")
+        document.querySelectorAll(`.primary-nav a:not(${matchingLink})`).forEach(el => el.classList.remove("is-current-link"))
+        document.querySelector(matchingLink).classList.add("is-current-link")
       }
     }
-  });
- }
-  
-  //refresh waypoints ,ethod when lazyload kicks in
-  refreshWaypoints(){
-    this.lazyImages.load(function(){
-      Waypoint.refreshAll();
-    });
   }
-  
-  //waypoint page-sections method
-  createPageSectionWaypoints(){
-    var that = this; //define this outside the event handler below so it can point to this keyword in constructor function
-    this.pageSections.each(function(){
-      var currentPageSection = this;
-      new Waypoint({
-        element: currentPageSection,
-        handler: function(direction){
-          if (direction == "down"){
-            var matchingHeaderLink = currentPageSection.getAttribute("data-matching-link");
-            //remove class first to go to next link:
-            that.headerLinks.removeClass("is-current-link");
-            //when removed can be added again:
-            $(matchingHeaderLink).addClass("is-current-link");
-          }
-        },
-        offset: "18%"
-      });
-      
-      new Waypoint({
-        element: currentPageSection,
-        handler: function(direction){
-          if (direction == "up"){
-            var matchingHeaderLink = currentPageSection.getAttribute("data-matching-link");
-            //remove class first to go to next link:
-            that.headerLinks.removeClass("is-current-link");
-            //when removed can be added again:
-            $(matchingHeaderLink).addClass("is-current-link");
-          }
-        },
-        offset: "-40%"
-      });
-    });
-  }
-  
-}// end of StickyHeader class
-export default StickyHeader;
+}
 
+export default StickyHeader
